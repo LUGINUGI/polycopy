@@ -45,10 +45,10 @@ export default function DashboardPage() {
 
   // Get user's embedded wallet address
   const embeddedWallet = user?.linkedAccounts?.find(
-    (account): account is { type: 'wallet'; address: string; walletClientType: string } => 
-      account.type === 'wallet' && 'walletClientType' in account && account.walletClientType === 'privy'
+    (account) => 
+      account.type === 'wallet' && 'walletClientType' in account && (account as { walletClientType: string }).walletClientType === 'privy'
   )
-  const walletAddress = embeddedWallet?.address
+  const walletAddress = embeddedWallet && 'address' in embeddedWallet ? embeddedWallet.address : undefined
 
   // Auto-create wallet if user doesn't have one
   useEffect(() => {
@@ -71,7 +71,8 @@ export default function DashboardPage() {
   const handleFundWallet = async () => {
     if (!walletAddress) return
     try {
-      await fundWallet(walletAddress, {
+      await fundWallet({
+        address: walletAddress,
         chain: { id: 137 }, // Polygon
         asset: 'USDC',
       })
