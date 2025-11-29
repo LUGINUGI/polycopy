@@ -73,8 +73,10 @@ export default function DashboardPage() {
     try {
       await fundWallet({
         address: walletAddress,
-        chain: { id: 137 }, // Polygon
-        asset: 'USDC',
+        options: {
+          chain: { id: 137 }, // Polygon
+          asset: 'USDC',
+        },
       })
       setShowAddFunds(false)
     } catch (error) {
